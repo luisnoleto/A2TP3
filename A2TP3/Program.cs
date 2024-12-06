@@ -25,6 +25,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ClockSkew = TimeSpan.Zero
         };
     });
+var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "A2TP3 API", Version = "v1" });
+    c.IncludeXmlComments(xmlPath); // Adiciona os comentários do XML
+});
 
 
 // Adicionar autorização
@@ -32,7 +39,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Sua API", Version = "v1" });
+    c.SwaggerDoc("v2", new OpenApiInfo { Title = "Sua API", Version = "v2" });
 
     c.AddSecurityDefinition("JWT", new OpenApiSecurityScheme
     {
@@ -54,7 +61,6 @@ builder.Services.AddSwaggerGen(c =>
         new string[] {}
     }});
 });
-
 
 
 // Configurar o DbContext para usar banco em memória

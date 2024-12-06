@@ -23,13 +23,32 @@ namespace A2TP3.Controllers
         }
 
         // GET: api/Categorias
+        /// <summary>
+        /// Busca todas as categorias já cadastradas no sistema
+        /// </summary>
+        /// <remarks>Se você como usuario logado adicionou alguma categoria ao sistema, ele aparecerá aqui, caso não, retorna uma lista vazia!</remarks>
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Categoria>>> GetCategoria()
         {
             return await _context.Categoria.ToListAsync();
         }
 
-        // GET: api/Categorias/5
+        /// <summary>
+        /// Mostra uma categoria pelo seu ID.
+        /// </summary>
+        /// <remarks>
+        /// Exemplo de resposta JSON:
+        ///   [
+        //      {
+        //          "id": 1,
+        //          "nome": "Terror"
+        //      }
+        //    ]
+        /// </remarks>
+        /// <response code="200">Retorn a categoria solicitada.</response>
+        /// <response code="404">Categoria não encontrada.</response>
+        /// <response code="401">Não autorizado, faça login.</response>
         [HttpGet("{id}")]
         public async Task<ActionResult<Categoria>> GetCategoria(int id)
         {
