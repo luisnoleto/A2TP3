@@ -26,6 +26,7 @@ namespace A2TP3.Controllers
         }
 
         // GET: api/Emprestimos
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Emprestimo>>> GetEmprestimos()
         {
@@ -48,6 +49,7 @@ namespace A2TP3.Controllers
         }
 
         // GET: api/Emprestimos/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Emprestimo>> GetEmprestimo(int id)
         {
@@ -73,51 +75,6 @@ namespace A2TP3.Controllers
             return emprestimo;
         }
 
-        // PUT: api/Emprestimos/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmprestimo(int id, Emprestimo emprestimo)
-        {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            if (userIdClaim == null)
-            {
-                return Unauthorized("Não foi possível obter o userId.");
-            }
-
-            var userId = int.Parse(userIdClaim.Value);
-
-            if (id != emprestimo.Id)
-            {
-                return BadRequest();
-            }
-
-            // Garante que só pode atualizar se for dono do empréstimo
-            var emprestimoExistente = await _context.Emprestimos.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id && e.UsuarioId == userId);
-            if (emprestimoExistente == null)
-            {
-                return NotFound("Empréstimo não encontrado ou não pertence a você.");
-            }
-
-            emprestimo.UsuarioId = userId; // Garante que o dono não mude
-            _context.Entry(emprestimo).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!EmprestimoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
 
         // POST: api/Emprestimos
         [Authorize]
@@ -182,33 +139,6 @@ namespace A2TP3.Controllers
         }
 
 
-        // DELETE: api/Emprestimos/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEmprestimo(int id)
-        {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            if (userIdClaim == null)
-            {
-                return Unauthorized("Não foi possível obter o userId.");
-            }
-
-            var userId = int.Parse(userIdClaim.Value);
-
-            var emprestimo = await _context.Emprestimos.FirstOrDefaultAsync(e => e.Id == id && e.UsuarioId == userId);
-            if (emprestimo == null)
-            {
-                return NotFound("Empréstimo não encontrado ou não pertence a você.");
-            }
-
-            _context.Emprestimos.Remove(emprestimo);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool EmprestimoExists(int id)
-        {
-            return _context.Emprestimos.Any(e => e.Id == id);
-        }
     }
 }
+

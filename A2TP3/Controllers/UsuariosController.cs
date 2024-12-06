@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using A2TP3.Models;
 using A2TP3.Persistence;
+using Microsoft.AspNetCore.Authorization;
 
 namespace A2TP3.Controllers
 {
@@ -22,6 +23,7 @@ namespace A2TP3.Controllers
         }
 
         // GET: api/Usuarios
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuario()
         {
@@ -29,6 +31,7 @@ namespace A2TP3.Controllers
         }
 
         // GET: api/Usuarios/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Usuario>> GetUsuario(int id)
         {
@@ -44,6 +47,7 @@ namespace A2TP3.Controllers
 
         // PUT: api/Usuarios/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUsuario(int id, Usuario usuario)
         {
@@ -93,6 +97,7 @@ namespace A2TP3.Controllers
         }
 
         // DELETE: api/Usuarios/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUsuario(int id)
         {

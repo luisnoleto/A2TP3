@@ -36,7 +36,7 @@ builder.Services.AddSwaggerGen(c =>
 
     c.AddSecurityDefinition("JWT", new OpenApiSecurityScheme
     {
-        Description = "Insira o seu token JWT sem as Aspas. Exemplo: eyJhbGciOi...",
+        Description = "ATENCAO!!! Insira o seu token JWT sem as Aspas, com o inicio Bearer. Exemplo: Bearer eyJhbGciOi...",
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,

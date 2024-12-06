@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using A2TP3.Models;
 using A2TP3.Persistence;
+using Microsoft.AspNetCore.Authorization;
 
 namespace A2TP3.Controllers
 {
@@ -45,6 +46,7 @@ namespace A2TP3.Controllers
 
         // PUT: api/Livros/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLivro(int id, Livro livro)
         {
@@ -76,6 +78,7 @@ namespace A2TP3.Controllers
 
         // POST: api/Livros
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Livro>> PostLivro(Livro livro)
         {
@@ -96,6 +99,7 @@ namespace A2TP3.Controllers
         }
 
         // DELETE: api/Livros/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLivro(int id)
         {

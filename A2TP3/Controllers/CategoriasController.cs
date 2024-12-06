@@ -23,7 +23,6 @@ namespace A2TP3.Controllers
         }
 
         // GET: api/Categorias
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Categoria>>> GetCategoria()
         {
@@ -94,6 +93,7 @@ namespace A2TP3.Controllers
 
 
         // DELETE: api/Categorias/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategoria(int id)
         {
