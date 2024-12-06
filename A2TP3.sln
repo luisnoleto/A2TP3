@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A2TP3", "A2TP3\A2TP3.csproj", "{F9C4A2EE-5FEC-4577-91A8-A06DDAB0EF2E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F9C4A2EE-5FEC-4577-91A8-A06DDAB0EF2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9C4A2EE-5FEC-4577-91A8-A06DDAB0EF2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9C4A2EE-5FEC-4577-91A8-A06DDAB0EF2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9C4A2EE-5FEC-4577-91A8-A06DDAB0EF2E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {236A8F94-B23F-4533-8E88-0E4CF4C9DE20}
+	EndGlobalSection
+EndGlobal
