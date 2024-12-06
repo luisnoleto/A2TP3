@@ -21,6 +21,9 @@ namespace A2TP3.Models
         [Display(Name = "Valor do Emprestimo")]
         public decimal ValorTotal { get; set; }
 
+        public int UsuarioId { get; set; }
+        public virtual Usuario Usuario { get; set; }
+
         public virtual List<EmprestimoLivro> EmprestimoLivros { get; set; }
 
     }

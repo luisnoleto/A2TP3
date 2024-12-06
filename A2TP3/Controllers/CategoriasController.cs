@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using A2TP3.Models;
 using A2TP3.Persistence;
+using Microsoft.AspNetCore.Authorization;
 
 namespace A2TP3.Controllers
 {
@@ -22,6 +23,7 @@ namespace A2TP3.Controllers
         }
 
         // GET: api/Categorias
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Categoria>>> GetCategoria()
         {
@@ -44,6 +46,8 @@ namespace A2TP3.Controllers
 
         // PUT: api/Categorias/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCategoria(int id, Categoria categoria)
         {
@@ -75,10 +79,11 @@ namespace A2TP3.Controllers
 
         // POST: api/Categorias
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Categoria>> PostCategoria(Categoria categoria)
         {
-            // Garantir que o Id seja 0, para forçar geração pelo EF
+            // Garantir que o Id seja 0,oforçar geração pelo EF
             categoria.Id = 0;
 
             _context.Categoria.Add(categoria);

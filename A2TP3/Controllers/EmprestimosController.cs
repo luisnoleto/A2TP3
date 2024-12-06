@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization; // Importante para o [Authorize]
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using A2TP3.Models;
 using A2TP3.Persistence;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace A2TP3.Controllers
 {
     [Route("api/emprestimos")]
     [ApiController]
+    [Authorize] // Garante que todos os métodos requerem usuário autenticado
     public class EmprestimosController : ControllerBase
     {
         private readonly A2TP3Context _context;
@@ -25,14 +29,41 @@ namespace A2TP3.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Emprestimo>>> GetEmprestimos()
         {
-            return await _context.Emprestimos.ToListAsync();
+            // Obter ID do usuário logado
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized("Não foi possível obter o userId.");
+            }
+
+            var userId = int.Parse(userIdClaim.Value);
+
+            // Retornar apenas os empréstimos do usuário logado
+            return await _context.Emprestimos
+                .Include(e => e.EmprestimoLivros)
+                .ThenInclude(el => el.Livro)
+                .ThenInclude(l => l.Categoria)
+                .Where(e => e.UsuarioId == userId)
+                .ToListAsync();
         }
 
         // GET: api/Emprestimos/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Emprestimo>> GetEmprestimo(int id)
         {
-            var emprestimo = await _context.Emprestimos.FindAsync(id);
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized("Não foi possível obter o userId.");
+            }
+
+            var userId = int.Parse(userIdClaim.Value);
+
+            var emprestimo = await _context.Emprestimos
+                .Include(e => e.EmprestimoLivros)
+                .ThenInclude(el => el.Livro)
+                .ThenInclude(l => l.Categoria)
+                .FirstOrDefaultAsync(e => e.Id == id && e.UsuarioId == userId);
 
             if (emprestimo == null)
             {
@@ -43,15 +74,30 @@ namespace A2TP3.Controllers
         }
 
         // PUT: api/Emprestimos/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEmprestimo(int id, Emprestimo emprestimo)
         {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized("Não foi possível obter o userId.");
+            }
+
+            var userId = int.Parse(userIdClaim.Value);
+
             if (id != emprestimo.Id)
             {
                 return BadRequest();
             }
 
+            // Garante que só pode atualizar se for dono do empréstimo
+            var emprestimoExistente = await _context.Emprestimos.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id && e.UsuarioId == userId);
+            if (emprestimoExistente == null)
+            {
+                return NotFound("Empréstimo não encontrado ou não pertence a você.");
+            }
+
+            emprestimo.UsuarioId = userId; // Garante que o dono não mude
             _context.Entry(emprestimo).State = EntityState.Modified;
 
             try
@@ -74,13 +120,30 @@ namespace A2TP3.Controllers
         }
 
         // POST: api/Emprestimos
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Emprestimo>> PostEmprestimo(EmprestimoDto dto)
         {
-            // Criar o objeto Emprestimo vazio, datas vindas do DTO
+            var allClaims = User.Claims.ToList();
+            if (!allClaims.Any())
+            {
+                return Unauthorized("Nenhuma claim encontrada no usuário. O token foi realmente validado?");
+            }
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized("Não foi possível obter o userId.");
+            }
+
+            var userId = int.Parse(userIdClaim.Value);
+
             var emprestimo = new Emprestimo
             {
-                EmprestimoLivros = new List<EmprestimoLivro>()
+                EmprestimoLivros = new List<EmprestimoLivro>(),
+                UsuarioId = userId, // Associa o empréstimo ao usuário logado
+                DataEmprestimo = DateTime.Now,
+                DataDevolucao = DateTime.Now.AddDays(7)
             };
 
             decimal valorTotal = 0;
@@ -94,7 +157,6 @@ namespace A2TP3.Controllers
                     return BadRequest($"Livro com ID {livroId} não encontrado.");
                 }
 
-                // Criar EmprestimoLivro
                 var emprestimoLivro = new EmprestimoLivro
                 {
                     Emprestimo = emprestimo,
@@ -102,21 +164,14 @@ namespace A2TP3.Controllers
                 };
 
                 emprestimo.EmprestimoLivros.Add(emprestimoLivro);
-
-                // Somar valor do livro ao valor total do empréstimo
                 valorTotal += livro.Valor;
             }
 
-            // Atribuir valor total calculado
             emprestimo.ValorTotal = valorTotal;
-            emprestimo.DataEmprestimo = DateTime.Now;
-            emprestimo.DataDevolucao = DateTime.Now.AddDays(7);
 
-            // Adicionar e salvar no contexto
             _context.Emprestimos.Add(emprestimo);
             await _context.SaveChangesAsync();
 
-            // Carregar dados completos (incluindo livros) para retornar ao cliente, se desejado
             var emprestimoCompleto = await _context.Emprestimos
                 .Include(e => e.EmprestimoLivros)
                 .ThenInclude(el => el.Livro)
@@ -131,10 +186,18 @@ namespace A2TP3.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEmprestimo(int id)
         {
-            var emprestimo = await _context.Emprestimos.FindAsync(id);
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized("Não foi possível obter o userId.");
+            }
+
+            var userId = int.Parse(userIdClaim.Value);
+
+            var emprestimo = await _context.Emprestimos.FirstOrDefaultAsync(e => e.Id == id && e.UsuarioId == userId);
             if (emprestimo == null)
             {
-                return NotFound();
+                return NotFound("Empréstimo não encontrado ou não pertence a você.");
             }
 
             _context.Emprestimos.Remove(emprestimo);

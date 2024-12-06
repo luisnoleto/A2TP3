@@ -12,9 +12,12 @@ namespace A2TP3.Persistence
 
         public DbSet<Emprestimo> Emprestimos { get; set; }
 
+        public DbSet<Usuario> Usuario { get; set; }
+
         public A2TP3Context(DbContextOptions<A2TP3Context> options)
             : base(options)
         {
         }
+      
     }
 }
