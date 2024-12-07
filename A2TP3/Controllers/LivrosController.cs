@@ -23,6 +23,10 @@ namespace A2TP3.Controllers
         }
 
         // GET: api/Livros
+        /// <summary>
+        /// Retorna todos os livros cadastrados.
+        /// </summary>
+        /// <remarks>Como usuario logado você pode ver todos os livros cadastrados no sistema!</remarks>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Livro>>> GetLivros()
         {
@@ -31,6 +35,10 @@ namespace A2TP3.Controllers
         }
 
         // GET: api/Livros/5
+        /// <summary>
+        /// Retorna um livro pelo Id.
+        /// </summary>
+        /// <remarks>Como usuario logado você pesquisar um livro previamente cadastrado pelo Id!</remarks>
         [HttpGet("{id}")]
         public async Task<ActionResult<Livro>> GetLivro(int id)
         {
@@ -45,7 +53,11 @@ namespace A2TP3.Controllers
         }
 
         // PUT: api/Livros/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Realiza a atualização de um livro.
+        /// </summary>
+        /// <remarks>Como usuario logado você pode atualizar um livro já cadastrado no sistema, utilizando o Id!</remarks>
+        /// 
         [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLivro(int id, Livro livro)
@@ -77,7 +89,11 @@ namespace A2TP3.Controllers
         }
 
         // POST: api/Livros
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Cadastra um novo livro no sistema.
+        /// </summary>
+        /// <remarks>Como usuario logado você pode cadastrar um novo livro no sistema, basta preencher os campos obrigatórios e colocar apenas o CategoriaId da categoria que você cadastrou anteriormente no sistema!</remarks>
+
         [Authorize]
         [HttpPost]
         public async Task<ActionResult<Livro>> PostLivro(Livro livro)
@@ -99,6 +115,10 @@ namespace A2TP3.Controllers
         }
 
         // DELETE: api/Livros/5
+        /// <summary>
+        /// Delete um livro do sistema.
+        /// </summary>
+        /// <remarks>Como usuario logado você pode deletar um livro do sistema, basta passar o Id do livro que deseja deletar!</remarks>
         [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLivro(int id)

@@ -19,7 +19,12 @@ namespace A2TP3.Controllers
             _context = context;
             _tokenService = tokenService;
         }
-
+        /// <summary>
+        /// Faz login no sistema.
+        /// </summary>
+        /// <remarks>Se você já tiver criado uma conta no endpoint de usuarios, pode fazer login aqui, para ter acesso as outras funcionalidades do sistema! Lembre-se de digitar Bearer antes de colcoar o token sem aspas no campo</remarks>
+        /// <response code="200">Retorna o token de acesso.</response>
+        ///
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO loginDto)
         {

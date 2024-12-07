@@ -23,6 +23,11 @@ namespace A2TP3.Controllers
         }
 
         // GET: api/Usuarios
+        /// <summary>
+        /// Retorna os usuarios cadastrados.
+        /// </summary>
+        /// <remarks>Como usuario logado você pode ver todos os usuarios cadastrados no sistema!</remarks>
+        /// 
         [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuario()
@@ -31,6 +36,10 @@ namespace A2TP3.Controllers
         }
 
         // GET: api/Usuarios/5
+        /// <summary>
+        /// Retorna um usuario pelo seu ID.
+        /// </summary>
+        /// <remarks>Como usuario logado você pode buscar um usuario pelo Id.</remarks>
         [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Usuario>> GetUsuario(int id)
@@ -47,6 +56,10 @@ namespace A2TP3.Controllers
 
         // PUT: api/Usuarios/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Atualiza um usuario já cadastrado.
+        /// </summary>
+        /// <remarks>Como usuario logado você pode alterar um usuario já cadastrado, através do Id.</remarks>
         [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUsuario(int id, Usuario usuario)
@@ -79,6 +92,10 @@ namespace A2TP3.Controllers
 
         // POST: api/Usuarios
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Cadastre-se no sistema.
+        /// </summary>
+        /// <remarks>Se você ainda não tem uma conta, pode se cadastrar aqui, para ter acesso as outras funcionalidades do sistema!</remarks>
         [HttpPost]
         public async Task<ActionResult<Usuario>> PostUsuario(UsuarioDTO usuarioDto)
 
@@ -97,6 +114,10 @@ namespace A2TP3.Controllers
         }
 
         // DELETE: api/Usuarios/5
+        /// <summary>
+        /// Delete um usuario pelo seu ID.
+        /// </summary>
+        /// <remarks>Como usuario logado você pode deletar um usuario pelo Id.</remarks>
         [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUsuario(int id)

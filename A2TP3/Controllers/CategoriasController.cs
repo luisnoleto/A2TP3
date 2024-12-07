@@ -27,7 +27,6 @@ namespace A2TP3.Controllers
         /// Busca todas as categorias já cadastradas no sistema
         /// </summary>
         /// <remarks>Se você como usuario logado adicionou alguma categoria ao sistema, ele aparecerá aqui, caso não, retorna uma lista vazia!</remarks>
-
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Categoria>>> GetCategoria()
         {
@@ -38,17 +37,10 @@ namespace A2TP3.Controllers
         /// Mostra uma categoria pelo seu ID.
         /// </summary>
         /// <remarks>
-        /// Exemplo de resposta JSON:
-        ///   [
-        //      {
-        //          "id": 1,
-        //          "nome": "Terror"
-        //      }
-        //    ]
+        /// Pode usar o id de uma categoria para buscar informações sobre ela.
         /// </remarks>
-        /// <response code="200">Retorn a categoria solicitada.</response>
+        /// <response code="200">Retorna a categoria solicitada.</response>
         /// <response code="404">Categoria não encontrada.</response>
-        /// <response code="401">Não autorizado, faça login.</response>
         [HttpGet("{id}")]
         public async Task<ActionResult<Categoria>> GetCategoria(int id)
         {
@@ -63,8 +55,14 @@ namespace A2TP3.Controllers
         }
 
         // PUT: api/Categorias/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-
+        ///<summary>
+        ///Atualiza uma categoria já cadastrada.
+        ///</summary>
+        ///<remarks>
+        ///Um usuario logado pode alterar uma categoria já cadastrada, através do Id.
+        ///</remarks>
+        /// <response code="200">Atualizada a categoria desejada.</response>
+        /// <response code="401">Não autorizado, faça login.</response>
         [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCategoria(int id, Categoria categoria)
@@ -96,7 +94,14 @@ namespace A2TP3.Controllers
         }
 
         // POST: api/Categorias
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Cadastra uma nova categoria no sistema.
+        /// </summary>
+        /// <remarks>
+        ///  Um usuario logado pode adicionar uma nova categoria ao sistema, colocando apenas o nome.
+        ///  </remarks>
+        /// <response code="200">Cadastra a categoria.</response>
+        /// <response code="401">Não autorizado, faça login.</response>
         [Authorize]
         [HttpPost]
         public async Task<ActionResult<Categoria>> PostCategoria(Categoria categoria)
@@ -112,6 +117,15 @@ namespace A2TP3.Controllers
 
 
         // DELETE: api/Categorias/5
+        /// <summary>
+        /// Deleta uma categoria do sistema.
+        /// </summary>
+        /// <remarks>
+        ///  Um usuario logado pode deletar uma categoria do sistema, através do Id.
+        ///  </remarks>
+        /// <response code="200">Categoria deletada.</response>
+        /// <response code="404">Categoria não encontrada.</response>
+        /// <response code="401">Não autorizado, faça login.</response>
         [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategoria(int id)

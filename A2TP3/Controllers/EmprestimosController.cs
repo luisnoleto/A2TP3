@@ -26,6 +26,10 @@ namespace A2TP3.Controllers
         }
 
         // GET: api/Emprestimos
+        /// <summary>
+        /// Busca seus empréstimos.
+        /// </summary>
+        /// <remarks>Como usuario logado você pode buscar todos os emprestimos que fez (apenas os do seu login irão aparecer)!</remarks>
         [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Emprestimo>>> GetEmprestimos()
@@ -49,6 +53,10 @@ namespace A2TP3.Controllers
         }
 
         // GET: api/Emprestimos/5
+        /// <summary>
+        /// Busca um empréstimo pelo ID.
+        /// </summary>
+        /// <remarks>Como usuario logado você pode buscar um emprestimo seu pelo Id.</remarks>
         [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Emprestimo>> GetEmprestimo(int id)
@@ -77,6 +85,10 @@ namespace A2TP3.Controllers
 
 
         // POST: api/Emprestimos
+        /// <summary>
+        /// Faz um empréstimo.
+        /// </summary>
+        /// <remarks>Como usuario logado você pode fazer um emprestimo de livros, basta passar os Ids dos livros que deseja alugar! (É preciso cadastrar um livro antes)</remarks>
         [Authorize]
         [HttpPost]
         public async Task<ActionResult<Emprestimo>> PostEmprestimo(EmprestimoDto dto)
